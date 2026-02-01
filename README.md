@@ -55,7 +55,7 @@ This project helped in understanding:
 	3. Enter Recivers address
 **Use the program for educational purposes only
 
-##Suggestions
+## Suggestions
 
 **If you want you can remove the plain text folder/code block**
 I made it for making my project more easier to understand and cross-check
@@ -81,6 +81,7 @@ Does not persist on the system
 Requires manual execution
 
 It is intended for cybersecurity education and defensive awareness only.
+
 
 
 
