@@ -33,29 +33,6 @@ This project helped in understanding:
 - Basic project structuring
 
 
-
-## 📂 Project Structure
-
-├── Cryptography/
-│ ├── generateKey.py
-│ └── encryption_key.txt
-|
-├── Project/
-|
-├── keylogger.py
-├── decryptKey.py
-├── requirements.txt
-|
-│ ├── Plain_Text/
-│ │ ├── key_log.txt
-│ │ ├── system_info.txt
-│ │ └── clipboard.txt
-│ ├── Encrypted/
-│ │ ├── e_key_information.txt
-│ │ ├── e_system_info.txt
-│ │ └── e_clipboard.txt
-│ └── Decrypted/
-
 ## 🔐 Encryption Details
 
 - Uses **Fernet symmetric encryption (AES-based)**
@@ -97,6 +74,7 @@ Does not persist on the system
 Requires manual execution
 
 It is intended for cybersecurity education and defensive awareness only.
+
 
 
 
