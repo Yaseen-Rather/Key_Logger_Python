@@ -46,10 +46,10 @@ This project helped in understanding:
 
 - open terminal
 - navigate to the directory where the Program is installed (eg: C:\Downloads\Key_Logger_Python)
--pip install -r requirements.txt
+- pip install -r requirements.txt
 - run the command
 	python -m Project.keylogger
--if you have enabled the email feature enables first enter 
+- if you have enabled the email feature enables first enter 
 	1. Sender's Email
 	2. App specific password
 	3. Enter Recivers address
@@ -81,6 +81,7 @@ Does not persist on the system
 Requires manual execution
 
 It is intended for cybersecurity education and defensive awareness only.
+
 
 
 
