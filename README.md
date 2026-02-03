@@ -70,17 +70,18 @@ It was excluded from execution due to reliability issues and is not required for
 
 🛡️ Ethical Notice
 
-This project:
+**This project:**
 
-Does not hide itself
+- Does not hide itself
 
-Does not auto-start
+- Does not auto-start
 
-Does not persist on the system
+- Does not persist on the system
 
-Requires manual execution
+- Requires manual execution
 
-It is intended for cybersecurity education and defensive awareness only.
+**It is intended for cybersecurity education and defensive awareness only.**
+
 
 
 
